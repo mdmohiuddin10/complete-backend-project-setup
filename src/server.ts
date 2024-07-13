@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import app from "./app";
-import config from "./app/config";
+// import config from "./app/config";
 import mongoose from "mongoose";
 
 async function main() {

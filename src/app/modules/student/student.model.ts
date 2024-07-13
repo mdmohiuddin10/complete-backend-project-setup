@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { Gourdian, LocalGuardian, Student, UserName } from './student/student.interface';
+import { Gourdian, LocalGuardian, Student, UserName } from './student.interface';
 
 const userNameSchema = new Schema<UserName>({
         firstName: {
@@ -73,4 +73,4 @@ const studentSchema = new Schema<Student>({
   });
 
 
-  const Student = model<Student>('Student', studentSchema)
+  export const StudentModel = model<Student>('Student', studentSchema)
