@@ -1,4 +1,6 @@
-export type Gourdian = {
+import { Model } from "mongoose";
+
+export type TGourdian = {
         fatherName: string;
         fatherOccupation : string;
         fatherContactNumber : string;
@@ -7,13 +9,13 @@ export type Gourdian = {
         motherContactNumber : string;
     }
 
-export type UserName = {
+export type TUserName = {
         firstName: string;
-        middleName: string;
+        middleName?: string;
         lastName: string 
     }
 
-export type LocalGuardian = {
+export type TLocalGuardian = {
     name : string;
     occupation : string;
     contactNo : string;
@@ -21,20 +23,33 @@ export type LocalGuardian = {
 }
     
 
-export type Student =  {
+export type TStudent =  {
     id: string,
-    name: UserName;
-    gender: "male" | "female";
+    name: TUserName;
+    gender: "male" | "female" | "others";
     email: string;
-    dateOfBirth : string;
+    dateOfBirth ?: string;
     contactNo : string;
     emergencyContactNumber : string;
     bloodGroup ?: "A+" | "A-" | "Ab+" | "O+" | "O-";
     presentAddress : string;
     permanentAddress : string;
-    guardian : Gourdian;
-    localGuardian : LocalGuardian;
+    guardian : TGourdian;
+    localGuardian : TLocalGuardian;
     profileImg ?: string;
     isActive : "active" | "blocked"
 
   }
+
+//   for creating static
+export interface StudentModel extends Model<TStudent> {
+    isUserExists(id: string): Promise<TStudent | null>;
+  }
+
+
+// for creating instance
+//   export type StudentMethods = {
+//     isUserExists( id: string ) : Promise<TStudent | null>
+//   }
+
+//    export type StudentModel = Model<TStudent, Record<string, never>, StudentMethods>;

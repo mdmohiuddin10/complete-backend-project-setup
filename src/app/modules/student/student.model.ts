@@ -1,20 +1,21 @@
 import { Schema, model } from 'mongoose';
-import { Gourdian, LocalGuardian, Student, UserName } from './student.interface';
-import validator from 'validator';
+import { StudentModel, TGourdian, TLocalGuardian, TStudent, TUserName } from './student.interface';
 
-const userNameSchema = new Schema<UserName>({
+// import validator from 'validator';
+
+const userNameSchema = new Schema<TUserName>({
     firstName: {
         type: String,
         required: true,
         trim: true,
         maxlength: [10, "name cannot be more than 30 characters"], // Corrected maxlength value
-        validate: {
-            validator: function(value) {
-                const firstNamestr = value.charAt(0).toUpperCase() + value.slice(1);
-                return firstNamestr === value;
-            },
-            message: props => `${props.value} is not capitalized`
-        }
+        // validate: {
+        //     validator: function(value) {
+        //         const firstNamestr = value.charAt(0).toUpperCase() + value.slice(1);
+        //         return firstNamestr === value;
+        //     },
+        //     message: props => `${props.value} is not capitalized`
+        // }
     },
         middleName : {
             type: String, 
@@ -26,15 +27,15 @@ const userNameSchema = new Schema<UserName>({
             required : true,
             trim: true,
             maxlength: [10, "name cannot be more than 30 character"],
-            validate: {
-                validator: (value: string)=>validator.isAlpha(value)
-            },
-            message: '{VALUE} is not capitalized'
+            // validate: {
+            //     validator: (value: string)=>validator.isAlpha(value),
+            //     message: '{VALUE} is not capitalized'
+            // },
         }
 })
 
 
-const guardianSchema = new Schema<Gourdian>({
+const guardianSchema = new Schema<TGourdian>({
         fatherName: {type: String, required: true},
         fatherOccupation: {type: String, required: true},
         fatherContactNumber: {type: String, required: true},
@@ -44,7 +45,7 @@ const guardianSchema = new Schema<Gourdian>({
 })
 
 
-const localGuardianSchema = new Schema<LocalGuardian>({
+const localGuardianSchema = new Schema<TLocalGuardian>({
         name: {type: String, required: true},
         occupation: {type: String, required: true},
         contactNo: {type: String, required: true},
@@ -53,7 +54,7 @@ const localGuardianSchema = new Schema<LocalGuardian>({
 
 
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<TStudent, StudentModel>({
     id: { type: String, required: true, unique: true},
     name: {
         type: userNameSchema,
@@ -74,10 +75,10 @@ const studentSchema = new Schema<Student>({
         type : String,
         required: true,
         unique: true,
-        validate: {
-            validator: (value: string)=> validator.isEmail(value)
-        },
-       message: '{VALUE} is not capitalized'
+        // validate: {
+        //     validator: (value: string)=> validator.isEmail(value),
+        //      message: '{VALUE} is not capitalized'
+        // },
     },
     contactNo : {
         type: String, 
@@ -118,5 +119,19 @@ const studentSchema = new Schema<Student>({
 
   });
 
+//   creating a custom static method
+studentSchema.statics.isUserExists = async function(id: string){
+    const existingUser = await Student.findOne({id})
+    return existingUser
+}
 
-  export const StudentModel = model<Student>('Student', studentSchema)
+
+
+//   creating a custom instance method
+//   studentSchema.methods.isUserExists = async function(id: string){
+//     const existingUser = await Student.findOne({ id})
+//     return existingUser
+//   }
+
+
+  export const Student = model<TStudent, StudentModel>('Student', studentSchema)
